@@ -17,9 +17,9 @@ const Login =(props)=>{
 
 
   return(
-    <div className="container flex flex-col items-center justify-center w-full h-full max-w-md m-auto bg-white rounded-lg shadow">
+    <div className="container flex flex-col items-center justify-center w-full max-w-md py-6 m-auto bg-white rounded-lg shadow">
       {/* Email */}
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full px-6">
         <label>Correo</label>
         <input 
           type="text"
@@ -29,7 +29,7 @@ const Login =(props)=>{
           onChange={(e)=>{setEmail(e.target.value)}}  />
       </div>
       {/* password */}
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full px-6">
         <label>Contraseña</label>
         <input 
           type="password"
@@ -39,7 +39,7 @@ const Login =(props)=>{
           onChange={(e)=>{setPassword(e.target.value)}}  />
       </div>
       {/* confirmation */}
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full px-6">
         <label>Confirmación</label>
         <input 
           type="confirmation"
@@ -51,7 +51,7 @@ const Login =(props)=>{
       {/* Problems */}
       <p>{problems}</p>
       {/* Buttons */}
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col justify-between w-full px-6">
         {hasAccount ? (
           <>
           <button 

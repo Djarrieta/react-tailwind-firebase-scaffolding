@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import {Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route,Redirect} from 'react-router-dom';
 import fire from "./fire"
 
 import Navbar from './components/Navbar';
@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Home from './pages/Home'
 import ItemDetail from './pages/ItemDetail'
 import Error404 from "./pages/Error404"
+import About from "./pages/About"
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
   const [password,setPassword]=useState("");
   const [confirmation,setConfirmation]=useState("");
   const [problems,setProblems]=useState("");
-  const [hasAccount,setHasAccount]=useState(false);
+  const [hasAccount,setHasAccount]=useState(true);
   const [loading,setLoading]=useState(true);
   
   const clearInputs=()=>{
@@ -72,32 +73,38 @@ function App() {
 
   if(!loading){
     return(
-      <div className="h-screen text-gray-500 bg-gray-100">
-        <Navbar 
-          currentUser={currentUser}
-          handleSignOut={handleSignOut}/>
-        <Login
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          confirmation={confirmation}
-          setConfirmation={setConfirmation}
-          handleLogin={handleLogin}
-          handleSignUp={handleSignUp}
-          hasAccount={hasAccount}
-          setHasAccount={setHasAccount}
-          problems={problems}/>
-        <Switch >
-          <Route path="/" exact component={Home}></Route>
-          <Route path="/item/:id" exact component={ItemDetail}></Route>
-          <Route component={Error404}></Route>
-        </Switch>
-      </div>
+      <BrowserRouter>
+        <div className="h-screen overflow-x-hidden overflow-y-scroll text-gray-500 bg-gray-100 ">
+          <Navbar 
+            currentUser={currentUser}
+            handleSignOut={handleSignOut}/>
+            <Switch >
+              <Route path="/" exact component={Home}/>
+              <Route path="/login" exact>
+                {!currentUser ? <Login 
+                  email={email}
+                  setEmail={setEmail}
+                  password={password}
+                  setPassword={setPassword}
+                  confirmation={confirmation}
+                  setConfirmation={setConfirmation}
+                  handleLogin={handleLogin}
+                  handleSignUp={handleSignUp}
+                  hasAccount={hasAccount}
+                  setHasAccount={setHasAccount}
+                  problems={problems}/> : <Redirect to="/"/>}
+              </Route>
+              <Route path="/about" exact>
+                {currentUser ? <About/> : <Redirect to="/"/>} 
+              </Route>
+              <Route path="/item/:id" exact component={ItemDetail}></Route>
+              <Route component={Error404}/>
+            </Switch>
+        </div>
+      </BrowserRouter>
     )
   }else{
     return("Cargando")
   }
 }
-
 export default App;
