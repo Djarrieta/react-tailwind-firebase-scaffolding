@@ -1,5 +1,5 @@
 import React from 'react'
-import { db } from '../App'
+/* import  db  from '../fire' */
 import firebase from "firebase/app"
 import { Link } from 'react-router-dom'
 
@@ -10,7 +10,7 @@ class Home extends React.Component{
     email:"",
     vector:[{nombre:"",email:"",id:""}]
   }
-  componentDidMount(){
+/*   componentDidMount(){
     this.setState({
       ...this.state,
       loading:true
@@ -27,7 +27,7 @@ class Home extends React.Component{
         loading:false
       })
     })
-  }
+  } */
 
   //Reactividad al estado con los inputs, se logra con la propidad name y value del input
   handleChange=e=>{
@@ -36,7 +36,7 @@ class Home extends React.Component{
     })
   }
   //Métodos 
-  saveData(nombre,email){
+/*   saveData(nombre,email){
     db.collection("items").doc().set({
       nombre,
       email,
@@ -47,7 +47,7 @@ class Home extends React.Component{
 
     })
     .catch(e=>console.error(e))
-  }
+  } */
   cleanData(){
     this.setState({
       ...this.state,

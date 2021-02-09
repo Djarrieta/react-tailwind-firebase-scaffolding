@@ -1,53 +1,103 @@
 import './App.css';
+import { useEffect, useState } from 'react';
+import {Switch, Route} from 'react-router-dom';
+import fire from "./fire"
+
 import Navbar from './components/Navbar';
+import Login from './pages/Login';
 import Home from './pages/Home'
 import ItemDetail from './pages/ItemDetail'
+import Error404 from "./pages/Error404"
 
-import {Switch, Route} from 'react-router-dom';
-
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
-
-var firebaseConfig = {
-  apiKey: "AIzaSyBkVlfqNiPAxJu5uGC9rjhQreM56FjvHhM",
-  authDomain: "react-tailwind-firebase.firebaseapp.com",
-  projectId: "react-tailwind-firebase",
-  storageBucket: "react-tailwind-firebase.appspot.com",
-  messagingSenderId: "605567699112",
-  appId: "1:605567699112:web:cc9e339c8cf0943be51a9d"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
 
 function App() {
+  const [currentUser,setCurrentUser]=useState("");
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [confirmation,setConfirmation]=useState("");
+  const [problems,setProblems]=useState("");
+  const [hasAccount,setHasAccount]=useState(false);
+  const [loading,setLoading]=useState(true);
+  
+  const clearInputs=()=>{
+    setEmail("")
+    setPassword("")
+    setConfirmation("")
+  }
+  const handleLogin=()=>{
+    setLoading(true)
+    fire.auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(()=>{setLoading(false)})
+    .catch(e=>{
+      console.log(e)
+      setProblems(e.code)
+      setLoading(false)
+    })
+  }
+  const handleSignUp=()=>{
+    setLoading(true)
+    fire.auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(()=>{setLoading(false)})
+    .catch(e=>{
+      console.log(e)
+      setProblems(e.code)
+      setLoading(false)
+    })
+  }
+  const handleSignOut=()=>{
+    setLoading(true)
+    fire.auth().signOut()
+    .then(()=>{setLoading(false)})
+    .catch(e=>{
+      console.log(e)
+      setProblems(e.code)
+      setLoading(false)
+    });
+  }
+  const authListener=()=>{
+    fire.auth().onAuthStateChanged((currentUser)=>{
+      if(currentUser){
+        setCurrentUser(currentUser)
+      }else{
+        setCurrentUser("")
+      }
+      setLoading(false)
+    })
+  }
+  useEffect(()=>{
+    authListener();
+  },[])
 
-  let currentUser="usuario"
-  firebase.auth().onAuthStateChanged((u)=>{
-    if(u){
-      db.collection("users").doc(u.uid.toString()).get()
-      .then(u=>{
-        currentUser={...u.data(),uid:u.id}
-        
-      })
-    }else{
-      currentUser="null"
-      
-    }
-  })
-  return (<div className="h-screen text-gray-500 bg-gray-100">
-  <Navbar currentUser={currentUser}/>
-  <Switch >
-    <Route path="/" exact component={Home}></Route>
-    <Route path="/item/:id" exact component={ItemDetail}></Route>
-  </Switch>
-</div>) 
-
+  if(!loading){
+    return(
+      <div className="h-screen text-gray-500 bg-gray-100">
+        <Navbar 
+          currentUser={currentUser}
+          handleSignOut={handleSignOut}/>
+        <Login
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          confirmation={confirmation}
+          setConfirmation={setConfirmation}
+          handleLogin={handleLogin}
+          handleSignUp={handleSignUp}
+          hasAccount={hasAccount}
+          setHasAccount={setHasAccount}
+          problems={problems}/>
+        <Switch >
+          <Route path="/" exact component={Home}></Route>
+          <Route path="/item/:id" exact component={ItemDetail}></Route>
+          <Route component={Error404}></Route>
+        </Switch>
+      </div>
+    )
+  }else{
+    return("Cargando")
+  }
 }
 
-
 export default App;
-export { db,storage};

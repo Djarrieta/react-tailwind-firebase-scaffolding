@@ -1,5 +1,5 @@
 import React from 'react'
-import { db } from '../App'
+/* import  db  from '../fire' */
 
 class ItemDetail extends React.Component {
   state={
@@ -8,7 +8,7 @@ class ItemDetail extends React.Component {
     email:null,
     id:null
   }
-  componentDidMount(){
+/*   componentDidMount(){
     db.collection("items").doc(this.props.match.params.id).get()
     .then((r)=>{
       this.setState({
@@ -18,7 +18,7 @@ class ItemDetail extends React.Component {
         id:r.id
       })
     })
-  }
+  } */
   render(){
     if(this.state.loading ){
       return <span className="container flex flex-col justify-center mx-auto">Cargando Datos...</span>
